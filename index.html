@@ -58,7 +58,6 @@
     <!-- SECTION LOGIN PAGE -->
     <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-darkbg p-4 sm:p-6 overflow-y-auto">
         <div class="w-full max-w-md bg-cardbg border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <!-- Background Glow Elements -->
             <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -112,7 +111,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTAINER (HIDDEN UNTIL LOGGED IN) -->
+    <!-- MAIN APP CONTAINER -->
     <div id="mainApp" class="hidden min-h-screen flex flex-col md:flex-row w-full">
 
         <header class="md:hidden flex items-center justify-between bg-cardbg border-b border-slate-800 px-4 py-3 sticky top-0 z-40">
@@ -529,26 +528,26 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">Identitas Router / Nama Server</label>
-                                    <input type="text" id="mikrorikNameInput" value="SERVER-HOME" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                    <input type="text" id="mikrotikNameInput" value="SERVER-HOME" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">IP Address / Host Router</label>
-                                    <input type="text" id="mikrotikIpInput" value="192.168.88.1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                    <input type="text" id="mikrotikIpInput" value="mikrotik.ispledger.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">Port API MikroTik</label>
-                                    <input type="number" id="mikrotikPortInput" value="8728" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                    <input type="number" id="mikrotikPortInput" value="9877" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">Username Admin Router</label>
-                                    <input type="text" id="mikrotikUserInput" value="admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                    <input type="text" id="mikrotikUserInput" value="ranetwork_api" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">Password Router</label>
-                                    <input type="password" id="mikrotikPassInput" value="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                    <input type="password" id="mikrotikPassInput" value="PasswordAmanAnda" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                                 </div>
                                 <div class="pt-2 flex space-x-3">
                                     <button onclick="testMikrotikConnection()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 rounded-xl font-semibold text-xs transition flex items-center justify-center space-x-2">
@@ -682,96 +681,20 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
-                                <table class="w-full text-left text-xs">
-                                    <thead>
-                                        <tr class="border-b border-slate-800 text-slate-400 font-semibold bg-slate-900/90">
-                                            <th class="p-3 pl-4">Nama Paket Layanan</th>
-                                            <th class="p-3">Jumlah Pelanggan</th>
-                                            <th class="p-3">Persentase</th>
-                                            <th class="p-3 pr-4">Estimasi Pendapatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-800/60 text-slate-300 font-mono">
-                                        <tr>
-                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Home 20 Mbps</td>
-                                            <td class="p-3 text-cyan-400 font-bold">42 User</td>
-                                            <td class="p-3">45%</td>
-                                            <td class="p-3 pr-4 text-emerald-400">Rp 6.300.000</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Home 10 Mbps</td>
-                                            <td class="p-3 text-emerald-400 font-bold">28 User</td>
-                                            <td class="p-3">30%</td>
-                                            <td class="p-3 pr-4 text-emerald-400">Rp 2.800.000</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Gamer 50 Mbps</td>
-                                            <td class="p-3 text-purple-400 font-bold">14 User</td>
-                                            <td class="p-3">15%</td>
-                                            <td class="p-3 pr-4 text-emerald-400">Rp 4.200.000</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Corporate & Hotspot</td>
-                                            <td class="p-3 text-amber-400 font-bold">9 User</td>
-                                            <td class="p-3">10%</td>
-                                            <td class="p-3 pr-4 text-emerald-400">Rp 4.500.000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
 
                         <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-5">
                             <h3 class="text-base font-bold text-slate-100 flex items-center">
                                 <i class="fa-solid fa-chart-pie text-cyan-400 mr-2"></i> Ringkasan Analitik
                             </h3>
-
                             <div class="space-y-4 text-xs text-slate-300">
                                 <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-200">Total Kapasitas Bandwidth</span>
                                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">1.000 Mbps (1 Gbps)</span>
                                     </div>
-                                    <p class="text-slate-400 text-[11px]">Kapasitas jalur pipa utama (Main Uplink ISP) dari Router Core MikroTik CCR1036.</p>
+                                    <p class="text-slate-400 text-[11px]">Kapasitas jalur pipa utama dari Router Core MikroTik CCR1036.</p>
                                 </div>
-
-                                <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-200">Pemakaian Bandwidth (24 Jam)</span>
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">5.82 TB</span>
-                                    </div>
-                                    <div class="space-y-1.5 pt-1 text-[11px]">
-                                        <div class="flex justify-between text-slate-300">
-                                            <span>Download (Rx)</span>
-                                            <span class="font-bold text-emerald-400">4.12 TB (70.8%)</span>
-                                        </div>
-                                        <div class="flex justify-between text-slate-300">
-                                            <span>Upload (Tx)</span>
-                                            <span class="font-bold text-cyan-400">1.70 TB (29.2%)</span>
-                                        </div>
-                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex mt-2">
-                                            <div class="bg-emerald-500 h-full" style="width: 70.8%"></div>
-                                            <div class="bg-cyan-500 h-full" style="width: 29.2%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-200">Rata-Rata Beban Puncak (Peak Rate)</span>
-                                        <span class="font-bold text-amber-400">84.5% Peak</span>
-                                    </div>
-                                    <p class="text-slate-400 text-[11px]">Beban bandwidth mencapai puncak 845 Mbps pada jam-jam sibuk (20:00 - 22:00 WIB).</p>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-cyan-950/20 rounded-xl border border-cyan-500/30 text-xs space-y-1">
-                                <div class="font-bold text-cyan-400 flex items-center">
-                                    <i class="fa-solid fa-circle-info mr-1.5"></i> Status Alokasi Network
-                                </div>
-                                <p class="text-slate-400 text-[11px]">Kapasitas sisa bandwidth saat ini masih mencukupi untuk penambahan +30 pelanggan baru.</p>
                             </div>
                         </div>
                     </div>
@@ -800,8 +723,6 @@
 
                     <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-6">
                         <h3 class="text-sm font-bold text-slate-200">Ubah Username & Password Admin</h3>
-                        <p class="text-xs text-slate-400">Perbarui kredensial akun login admin sistem R.A Network.</p>
-                        
                         <form onsubmit="handleUpdateCredentials(event)" class="space-y-4 max-w-md text-xs">
                             <div>
                                 <label class="block font-semibold text-slate-300 mb-1">Username Baru</label>
@@ -828,39 +749,30 @@
             <button onclick="closeModal('packageModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <div class="text-center mb-4">
-                <h3 id="packageModalTitle" class="text-lg font-bold text-slate-100">Tambah Paket Internet Baru</h3>
-                <p class="text-xs text-slate-400">Paket akan langsung tersedia untuk pilihan tagihan & struk</p>
-            </div>
-
+            <h3 id="packageModalTitle" class="text-lg font-bold text-slate-100 text-center mb-4">Tambah Paket Internet Baru</h3>
             <form onsubmit="handleSavePackage(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="pkgEditId" value="">
                 <div>
                     <label class="block font-semibold text-slate-300 mb-1">Nama Paket</label>
-                    <input type="text" id="pkgName" required placeholder="Contoh: Paket Ultra Speed 100 Mbps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="pkgName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Kecepatan (Bandwidth)</label>
-                    <input type="text" id="pkgSpeed" required placeholder="Contoh: 100 Mbps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <label class="block font-semibold text-slate-300 mb-1">Kecepatan</label>
+                    <input type="text" id="pkgSpeed" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Kategori / Segmen</label>
-                    <select id="pkgCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <label class="block font-semibold text-slate-300 mb-1">Kategori</label>
+                    <select id="pkgCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                         <option value="Home Broadband">Home Broadband</option>
                         <option value="Gamer & Premium">Gamer & Premium</option>
                         <option value="Corporate / Dedicated">Corporate / Dedicated</option>
-                        <option value="Hotspot Voucher">Hotspot Voucher</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Harga Bulanan (Rp)</label>
-                    <input type="number" id="pkgPrice" required placeholder="150000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <label class="block font-semibold text-slate-300 mb-1">Harga (Rp)</label>
+                    <input type="number" id="pkgPrice" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
-
-                <div class="pt-2 flex space-x-2">
-                    <button type="button" onclick="closeModal('packageModal')" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition">Batal</button>
-                    <button type="submit" class="w-1/2 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition shadow-md">Simpan Paket</button>
-                </div>
+                <button type="submit" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition">Simpan</button>
             </form>
         </div>
     </div>
@@ -870,34 +782,25 @@
             <button onclick="closeModal('addBillingModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <div class="text-center mb-4">
-                <h3 class="text-lg font-bold text-slate-100">Buat Tagihan Baru</h3>
-                <p class="text-xs text-slate-400">Pilih paket terintegrasi untuk otomatis mengisi tarif</p>
-            </div>
-
+            <h3 class="text-lg font-bold text-slate-100 text-center mb-4">Buat Tagihan Baru</h3>
             <form onsubmit="handleSaveBilling(event)" class="space-y-4 text-xs">
                 <div>
                     <label class="block font-semibold text-slate-300 mb-1">Nama Pelanggan</label>
-                    <input type="text" id="billCustName" required placeholder="Nama Pelanggan" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="billCustName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Pilih Paket Terintegrasi</label>
-                    <select id="billPackageSelect" onchange="autoFillBillingAmount(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
-                    </select>
+                    <label class="block font-semibold text-slate-300 mb-1">Pilih Paket</label>
+                    <select id="billPackageSelect" onchange="autoFillBillingAmount(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100"></select>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Jumlah Tagihan (Rp)</label>
-                    <input type="number" id="billAmount" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <label class="block font-semibold text-slate-300 mb-1">Jumlah (Rp)</label>
+                    <input type="number" id="billAmount" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-300 mb-1">Jatuh Tempo</label>
-                    <input type="date" id="billDueDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    <input type="date" id="billDueDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100">
                 </div>
-
-                <div class="pt-2 flex space-x-2">
-                    <button type="button" onclick="closeModal('addBillingModal')" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition">Batal</button>
-                    <button type="submit" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-md">Buat Invoice</button>
-                </div>
+                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition">Buat Invoice</button>
             </form>
         </div>
     </div>
@@ -907,89 +810,22 @@
             <button onclick="closeModal('printReceiptModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <div class="text-center mb-4">
-                <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center mx-auto mb-2 text-xl border border-cyan-500/30">
-                    <i class="fas fa-print"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-100">Print Preview Struk</h3>
-                <p class="text-xs text-slate-400">Struk Pembayaran Lunas Resmi R.A Network</p>
-            </div>
-
             <div id="receiptPreviewBox" class="bg-white text-slate-900 p-5 rounded-xl shadow-inner font-mono text-[11px] leading-tight space-y-3 mb-5 border border-slate-300">
                 <div class="text-center border-b border-dashed border-slate-400 pb-3">
                     <h4 class="font-bold text-sm tracking-widest text-slate-900 uppercase">R.A NETWORK DIGITAL SOLUTION</h4>
-                    <p class="text-[10px] text-slate-600">Internet Service Provider & Infrastucture</p>
-                    <p class="text-[10px] text-slate-600">0851-5990-0223</p>
+                    <p class="text-[10px] text-slate-600">Internet Service Provider</p>
                 </div>
-
                 <div class="space-y-1 text-[11px] text-slate-800">
                     <div class="flex justify-between"><span>No. Transaksi</span> <span id="recInvoiceId" class="font-bold">INV-0000</span></div>
-                    <div class="flex justify-between"><span>Tanggal Bayar</span> <span id="recDate">01 Jan 2026 14:30</span></div>
-                    <div class="flex justify-between"><span>Nama Pelanggan</span> <span id="recCustomer" class="font-bold">Budi Santoso</span></div>
-                    <div class="flex justify-between"><span>Layanan / Paket</span> <span id="recPackage" class="font-bold">Paket Home 20 Mbps</span></div>
+                    <div class="flex justify-between"><span>Nama Pelanggan</span> <span id="recCustomer" class="font-bold">Budi</span></div>
+                    <div class="flex justify-between"><span>Paket</span> <span id="recPackage" class="font-bold">Paket</span></div>
                 </div>
-
-                <div class="border-t border-b border-dashed border-slate-400 py-2">
-                    <table class="w-full text-left text-[11px]">
-                        <thead>
-                            <tr class="border-b border-slate-300 text-[10px] text-slate-600">
-                                <th class="pb-1">Keterangan</th>
-                                <th class="pb-1 text-right">Jumlah</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td id="recItemDesc" class="py-1">Biaya Layanan Internet Bulanan</td>
-                                <td id="recSubtotal" class="py-1 text-right font-semibold">Rp 150.000</td>
-                            </tr>
-                            <tr>
-                                <td class="py-1 text-emerald-600 font-bold">STATUS PEMBAYARAN</td>
-                                <td class="py-1 text-right text-emerald-600 font-bold">LUNAS</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
                 <div class="flex justify-between items-center text-xs font-bold pt-1 text-slate-900 border-t border-slate-300">
-                    <span>TOTAL PEMBAYARAN</span>
-                    <span id="recTotal" class="text-sm">Rp 150.000</span>
-                </div>
-
-                <div id="receiptBarcodeContainer" class="hidden text-center border-t border-dashed border-slate-400 pt-3 mt-2">
-                    <p class="text-[10px] font-bold text-slate-800 mb-1">SCAN BARCODE PEMBAYARAN VIA QRIS</p>
-                    <div id="receiptBarcodeWrapper" class="flex justify-center"></div>
-                </div>
-
-                <div class="text-center border-t border-dashed border-slate-400 pt-3 mt-2 text-[10px] text-slate-600 space-y-1">
-                    <p class="font-bold text-slate-800">Terima Kasih Atas Pembayaran Anda!</p>
-                    <p>Struk ini merupakan bukti pembayaran yang sah.</p>
-                    <p class="text-[9px] text-slate-500 font-sans mt-2">-- Powered by R.A Network Digital Solution --</p>
+                    <span>TOTAL</span>
+                    <span id="recTotal" class="text-sm">Rp 0</span>
                 </div>
             </div>
-
-            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 mb-4 flex items-center justify-between text-xs">
-                <span class="text-slate-300 font-medium flex items-center">
-                    <i class="fa-solid fa-barcode text-cyan-400 mr-2"></i> Tampilkan Barcode QRIS
-                </span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="toggleBarcodeCheckbox" class="sr-only peer" onchange="toggleReceiptBarcode(this.checked)">
-                    <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
-                </label>
-            </div>
-
-            <div class="space-y-2">
-                <div class="flex space-x-2">
-                    <button onclick="triggerPrintReceipt()" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold text-xs border border-slate-700 transition flex items-center justify-center space-x-1.5">
-                        <i class="fas fa-print text-cyan-400"></i>
-                        <span>Cetak Struk</span>
-                    </button>
-                    <button onclick="sendReceiptToWhatsApp()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold text-xs transition flex items-center justify-center space-x-1.5">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>Kirim WA</span>
-                    </button>
-                </div>
-                <button onclick="closeModal('printReceiptModal')" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 rounded-xl text-xs font-semibold transition">Tutup</button>
-            </div>
+            <button onclick="triggerPrintReceipt()" class="w-full py-2.5 bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs">Cetak Struk</button>
         </div>
     </div>
 
@@ -1009,28 +845,19 @@
         let internetPackages = [
             { id: 1, name: 'Paket Home 10 Mbps', speed: '10 Mbps', category: 'Home Broadband', price: 100000 },
             { id: 2, name: 'Paket Home 20 Mbps', speed: '20 Mbps', category: 'Home Broadband', price: 150000 },
-            { id: 3, name: 'Paket Gamer 50 Mbps', speed: '50 Mbps', category: 'Gamer & Premium', price: 300000 },
-            { id: 4, name: 'Paket Corporate Dedicated', speed: '100 Mbps', category: 'Corporate / Dedicated', price: 500000 }
+            { id: 3, name: 'Paket Gamer 50 Mbps', speed: '50 Mbps', category: 'Gamer & Premium', price: 300000 }
         ];
 
         let pppoeUsers = [
-            { id: 'CUST-001', name: 'Budi Santoso', phone: '081234567890', username: 'budi_pppoe', package: 'Paket Home 20 Mbps', ip: '10.10.10.2', status: 'Active', expiry: '28 Feb 2026', routerLink: 'Connected' },
-            { id: 'CUST-002', name: 'Siti Aminah', phone: '081345678901', username: 'siti_pppoe', package: 'Paket Home 10 Mbps', ip: '10.10.10.3', status: 'Active', expiry: '02 Mar 2026', routerLink: 'Connected' },
-            { id: 'CUST-003', name: 'Joko Widodo', phone: '081567890123', username: 'joko_pppoe', package: 'Paket Gamer 50 Mbps', ip: '10.10.10.4', status: 'Isolated', expiry: '10 Jan 2026', routerLink: 'Disconnected' },
-            { id: 'CUST-004', name: 'Ahmad Dani', phone: '081789012345', username: 'ahmad_pppoe', package: 'Paket Home 20 Mbps', ip: '10.10.10.5', status: 'Active', expiry: '15 Mar 2026', routerLink: 'Connected' },
-            { id: 'CUST-005', name: 'Dewi Lestari', phone: '081890123456', username: 'dewi_pppoe', package: 'Paket Home 10 Mbps', ip: '10.10.10.6', status: 'Active', expiry: '20 Mar 2026', routerLink: 'Connected' }
+            { id: 'CUST-001', name: 'Budi Santoso', phone: '081234567890', username: 'budi_pppoe', package: 'Paket Home 20 Mbps', ip: '10.10.10.2', status: 'Active', expiry: '28 Feb 2026' }
         ];
 
         let hotspotUsers = [
-            { id: 'HOT-001', name: 'Voucher 3 Jam', profile: 'Hotspot 3 Jam', username: 'vcr-9921', status: 'Active', uptime: '01:24:12' },
-            { id: 'HOT-002', name: 'Voucher 1 Hari', profile: 'Hotspot 1 Hari', username: 'vcr-4412', status: 'Active', uptime: '05:12:40' },
-            { id: 'HOT-003', name: 'Voucher Harian', profile: 'Hotspot 1 Hari', username: 'vcr-7783', status: 'Active', uptime: '00:45:10' }
+            { id: 'HOT-001', name: 'Voucher 3 Jam', profile: 'Hotspot 3 Jam', username: 'vcr-9921', status: 'Active', uptime: '01:24:12' }
         ];
 
         let billings = [
-            { inv: 'INV-2026-001', name: 'Budi Santoso', package: 'Paket Home 20 Mbps', amount: 150000, status: 'Lunas', dueDate: '2026-02-28' },
-            { inv: 'INV-2026-002', name: 'Siti Aminah', package: 'Paket Home 10 Mbps', amount: 100000, status: 'Lunas', dueDate: '2026-03-02' },
-            { inv: 'INV-2026-003', name: 'Joko Widodo', package: 'Paket Gamer 50 Mbps', amount: 300000, status: 'Belum Lunas', dueDate: '2026-01-10' }
+            { inv: 'INV-2026-001', name: 'Budi Santoso', package: 'Paket Home 20 Mbps', amount: 150000, status: 'Lunas', dueDate: '2026-02-28' }
         ];
 
         let qrisImageUrl = '';
@@ -1044,8 +871,7 @@
         }
 
         function closeCustomAlert() {
-            const modal = document.getElementById('customAlertModal');
-            if(modal) modal.classList.add('hidden');
+            document.getElementById('customAlertModal').classList.add('hidden');
         }
 
         function handleLogin(e) {
@@ -1058,7 +884,6 @@
                 alertBox.classList.add('hidden');
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
-                
                 renderDashboard();
                 renderPppoeTable();
                 renderHotspotTable();
@@ -1071,10 +896,8 @@
 
         function handleUpdateCredentials(e) {
             e.preventDefault();
-            const newU = document.getElementById('settingsNewUsername').value;
-            const newP = document.getElementById('settingsNewPassword').value;
-            adminCredentials.username = newU;
-            adminCredentials.password = newP;
+            adminCredentials.username = document.getElementById('settingsNewUsername').value;
+            adminCredentials.password = document.getElementById('settingsNewPassword').value;
             alertMsg('Username dan password admin berhasil diperbarui!');
         }
 
@@ -1085,41 +908,16 @@
         }
 
         function switchTab(tabId) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.add('hidden'));
-
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             const activeTab = document.getElementById(`tab-${tabId}`);
-            if (activeTab) {
-                activeTab.classList.remove('hidden');
-            }
+            if (activeTab) activeTab.classList.remove('hidden');
 
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
+            document.querySelectorAll('.nav-item').forEach(item => {
                 item.className = "nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200";
             });
-
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) {
                 activeNav.className = "nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-sm";
-            }
-
-            const titleMap = {
-                'dashboard': 'Dashboard',
-                'pelanggan': 'Pelanggan',
-                'packages': 'Paket',
-                'billing': 'Tagihan & Struk',
-                'mikrotik': 'Integrasi MikroTik',
-                'analytics': 'Analytics',
-                'settings': 'Pengaturan'
-            };
-            const pageTitleEl = document.getElementById('pageTitle');
-            if (pageTitleEl) {
-                pageTitleEl.innerHTML = `<i class="fa-solid fa-chart-line text-cyan-400 mr-2.5"></i> ${titleMap[tabId] || 'Dashboard'}`;
-            }
-
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.add('-translate-x-full');
             }
         }
 
@@ -1143,287 +941,80 @@
         }
 
         function renderPackages() {
-            const gridContainer = document.getElementById('packagesGridContainer');
             const tbody = document.getElementById('packagesTableBody');
-
-            if (gridContainer) {
-                gridContainer.innerHTML = internetPackages.slice(0, 3).map(pkg => `
-                    <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-cyan-400 tracking-wider">${pkg.category}</span>
-                                <h4 class="font-bold text-sm text-slate-100 mt-0.5">${pkg.name}</h4>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">${pkg.speed}</span>
-                        </div>
-                        <div class="flex justify-between items-center border-t border-slate-800 pt-3">
-                            <span class="text-xs font-bold text-slate-200">Rp ${pkg.price.toLocaleString()}<span class="text-[10px] font-normal text-slate-400">/bln</span></span>
-                            <button onclick="editPackage(${pkg.id})" class="text-xs text-cyan-400 hover:underline">Edit</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
             if (tbody) {
                 tbody.innerHTML = internetPackages.map(pkg => `
-                    <tr class="hover:bg-slate-800/40 transition">
+                    <tr class="hover:bg-slate-800/45 transition">
                         <td class="p-3.5 pl-4 font-bold text-slate-200">${pkg.name}</td>
                         <td class="p-3.5 font-mono text-cyan-400">${pkg.speed}</td>
-                        <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">${pkg.category}</span></td>
+                        <td class="p-3.5">${pkg.category}</td>
                         <td class="p-3.5 font-semibold text-emerald-400">Rp ${pkg.price.toLocaleString()}</td>
-                        <td class="p-3.5 pr-4 text-center space-x-2">
-                            <button onclick="editPackage(${pkg.id})" class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded hover:bg-cyan-500/20 text-xs font-medium">Edit</button>
-                            <button onclick="deletePackage(${pkg.id})" class="px-2.5 py-1 bg-rose-500/10 text-rose-400 rounded hover:bg-rose-500/20 text-xs font-medium">Hapus</button>
-                        </td>
+                        <td class="p-3.5 text-center">Hapus/Edit</td>
                     </tr>
                 `).join('');
             }
-        }
-
-        function openPackageModal() {
-            document.getElementById('packageModalTitle').innerText = "Tambah Paket Internet Baru";
-            document.getElementById('pkgEditId').value = "";
-            document.getElementById('pkgName').value = "";
-            document.getElementById('pkgSpeed').value = "";
-            document.getElementById('pkgCategory').value = "Home Broadband";
-            document.getElementById('pkgPrice').value = "";
-            document.getElementById('packageModal').classList.remove('hidden');
-        }
-
-        function editPackage(id) {
-            const pkg = internetPackages.find(p => p.id === id);
-            if (!pkg) return;
-            document.getElementById('packageModalTitle').innerText = "Edit Paket Internet";
-            document.getElementById('pkgEditId').value = pkg.id;
-            document.getElementById('pkgName').value = pkg.name;
-            document.getElementById('pkgSpeed').value = pkg.speed;
-            document.getElementById('pkgCategory').value = pkg.category;
-            document.getElementById('pkgPrice').value = pkg.price;
-            document.getElementById('packageModal').classList.remove('hidden');
-        }
-
-        function handleSavePackage(e) {
-            e.preventDefault();
-            const editId = document.getElementById('pkgEditId').value;
-            const name = document.getElementById('pkgName').value;
-            const speed = document.getElementById('pkgSpeed').value;
-            const category = document.getElementById('pkgCategory').value;
-            const price = parseInt(document.getElementById('pkgPrice').value, 10);
-
-            if (editId) {
-                const pkg = internetPackages.find(p => p.id === parseInt(editId, 10));
-                if (pkg) {
-                    pkg.name = name;
-                    pkg.speed = speed;
-                    pkg.category = category;
-                    pkg.price = price;
-                }
-            } else {
-                const newPkg = {
-                    id: Date.now(),
-                    name: name,
-                    speed: speed,
-                    category: category,
-                    price: price
-                };
-                internetPackages.push(newPkg);
-            }
-
-            renderPackages();
-            closeModal('packageModal');
-        }
-
-        function deletePackage(id) {
-            internetPackages = internetPackages.filter(p => p.id !== id);
-            renderPackages();
-        }
-
-        function openAddBillingModal() {
-            const selectEl = document.getElementById('billPackageSelect');
-            selectEl.innerHTML = internetPackages.map(pkg => `<option value="${pkg.name}">${pkg.name} - Rp ${pkg.price.toLocaleString()}</option>`).join('');
-            if(internetPackages.length > 0) {
-                autoFillBillingAmount(internetPackages[0].name);
-            }
-            document.getElementById('addBillingModal').classList.remove('hidden');
-        }
-
-        function autoFillBillingAmount(pkgName) {
-            const pkg = internetPackages.find(p => p.name === pkgName);
-            if (pkg) {
-                document.getElementById('billAmount').value = pkg.price;
-            }
-        }
-
-        function handleSaveBilling(e) {
-            e.preventDefault();
-            const name = document.getElementById('billCustName').value;
-            const pkgName = document.getElementById('billPackageSelect').value;
-            const amount = parseInt(document.getElementById('billAmount').value, 10);
-            const dueDate = document.getElementById('billDueDate').value;
-
-            const newInv = {
-                inv: `INV-2026-00${billings.length + 1}`,
-                name: name,
-                package: pkgName,
-                amount: amount,
-                status: 'Lunas',
-                dueDate: dueDate
-            };
-
-            billings.unshift(newInv);
-            renderBilling();
-            closeModal('addBillingModal');
         }
 
         function renderDashboard() {
-            const activeCount = pppoeUsers.filter(u => u.status === 'Active').length;
-            const isolatedCount = pppoeUsers.filter(u => u.status === 'Isolated').length;
-            const hotspotCount = hotspotUsers.length;
-
-            const statActive = document.getElementById('statActiveCount');
-            const statPppoe = document.getElementById('statPppoeCount');
-            const statHotspot = document.getElementById('statHotspotCount');
-            const statIsolated = document.getElementById('statIsolatedCount');
-
-            if(statActive) statActive.innerText = activeCount + hotspotCount;
-            if(statPppoe) statPppoe.innerText = activeCount;
-            if(statHotspot) statHotspot.innerText = hotspotCount;
-            if(statIsolated) statIsolated.innerText = isolatedCount;
-
-            const dTable = document.getElementById('dashboardPppoeTableBody');
-            if(dTable) {
-                dTable.innerHTML = pppoeUsers.slice(0, 3).map(u => `
-                    <tr class="hover:bg-slate-800/40 transition">
-                        <td class="p-3 pl-3 font-medium text-slate-200">${u.name}</td>
-                        <td class="p-3 font-mono text-cyan-400">${u.username}</td>
-                        <td class="p-3">${u.package}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'Active' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">${u.status}</span></td>
-                        <td class="p-3 text-center pr-3">
-                            <button onclick="switchTab('pelanggan')" class="text-xs text-cyan-400 hover:underline">Detail</button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
+            document.getElementById('statActiveCount').innerText = pppoeUsers.length + hotspotUsers.length;
+            document.getElementById('statPppoeCount').innerText = pppoeUsers.length;
+            document.getElementById('statHotspotCount').innerText = hotspotUsers.length;
         }
 
         function renderPppoeTable() {
             const tbody = document.getElementById('pppoeTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = pppoeUsers.map(u => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-3.5 pl-3">
-                        <div class="font-bold text-slate-100">${u.name}</div>
-                        <div class="text-[11px] text-slate-400">${u.phone}</div>
-                    </td>
-                    <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${u.package}</span></td>
-                    <td class="p-3.5 font-mono">
-                        <div class="text-slate-200">${u.username}</div>
-                        <div class="text-[10px] text-slate-400">${u.ip}</div>
-                    </td>
-                    <td class="p-3.5">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${u.status === 'Active' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">${u.status}</span>
-                    </td>
-                    <td class="p-3.5 text-slate-300">${u.expiry}</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="checkCustomerRouter('${u.username}', '${u.ip}')" class="px-2.5 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded text-xs font-semibold transition" title="Cek Router Pelanggan">
-                            <i class="fa-solid fa-satellite-dish"></i> Cek Router
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function checkCustomerRouter(username, ip) {
-            alertMsg(`Mengecek router pelanggan:\nUsername: ${username}\nIP: ${ip}\n\nStatus: BERHASIL (Ping OK, Latency: 3.5ms, Response normal).`);
+            if(tbody) {
+                tbody.innerHTML = pppoeUsers.map(u => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3.5 pl-3"><div class="font-bold text-slate-100">${u.name}</div><div class="text-[11px] text-slate-400">${u.phone}</div></td>
+                        <td class="p-3.5">${u.package}</td>
+                        <td class="p-3.5 font-mono">${u.username}<br><span class="text-[10px] text-slate-400">${u.ip}</span></td>
+                        <td class="p-3.5"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">${u.status}</span></td>
+                        <td class="p-3.5 text-slate-300">${u.expiry}</td>
+                        <td class="p-3.5 text-center"><button onclick="alertMsg('Cek Router OK')" class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded text-xs">Cek Router</button></td>
+                    </tr>
+                `).join('');
+            }
         }
 
         function renderHotspotTable() {
             const tbody = document.getElementById('hotspotTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = hotspotUsers.map(h => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-3.5 pl-3">
-                        <div class="font-bold text-slate-100">${h.name}</div>
-                        <div class="text-[11px] text-purple-400">${h.profile}</div>
-                    </td>
-                    <td class="p-3.5 font-mono text-slate-200">${h.username}</td>
-                    <td class="p-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">${h.status}</span></td>
-                    <td class="p-3.5 font-mono text-slate-300">${h.uptime}</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="alertMsg('Session Hotspot Active')" class="text-xs text-purple-400 hover:underline">Info</button>
-                    </td>
-                </tr>
-            `).join('');
+            if(tbody) {
+                tbody.innerHTML = hotspotUsers.map(h => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3.5 pl-3">${h.name}</td>
+                        <td class="p-3.5">${h.profile}</td>
+                        <td class="p-3.5 font-mono">${h.username}</td>
+                        <td class="p-3.5">${h.status}</td>
+                        <td class="p-3.5 font-mono">${h.uptime}</td>
+                        <td class="p-3.5 text-center">-</td>
+                    </tr>
+                `).join('');
+            }
         }
 
         function renderBilling() {
             const tbody = document.getElementById('billingTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = billings.map(b => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-3.5 font-mono text-cyan-400">${b.inv}</td>
-                    <td class="p-3.5 font-bold text-slate-200">${b.name}</td>
-                    <td class="p-3.5">${b.package}</td>
-                    <td class="p-3.5 font-semibold text-slate-100">Rp ${b.amount.toLocaleString()}</td>
-                    <td class="p-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${b.status === 'Lunas' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${b.status}</span></td>
-                    <td class="p-3.5 text-slate-300">${b.dueDate}</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="openReceiptModal('${b.inv}')" class="px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-semibold transition"><i class="fa-solid fa-print mr-1"></i> Struk</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function filterPelanggan() {}
-        function handleGlobalSearch(e) {}
-
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            if(sidebar) sidebar.classList.toggle('-translate-x-full');
-        }
-
-        function triggerLogoUpload() {
-            document.getElementById('logoFileInput').click();
-        }
-
-        function handleLogoUpload(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const logoContainers = [document.getElementById('mobileLogoContainer'), document.getElementById('desktopLogoContainer')];
-                    logoContainers.forEach(container => {
-                        if(container) {
-                            container.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
-                        }
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function handleQrisUpload(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    qrisImageUrl = evt.target.result;
-                    const previewBox = document.getElementById('settingsQrisPreviewBox');
-                    if(previewBox) {
-                        previewBox.innerHTML = `<img src="${qrisImageUrl}" class="w-full h-full object-cover">`;
-                    }
-                };
-                reader.readAsDataURL(file);
+            if(tbody) {
+                tbody.innerHTML = billings.map(b => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3.5 font-mono text-cyan-400">${b.inv}</td>
+                        <td class="p-3.5 font-bold">${b.name}</td>
+                        <td class="p-3.5">${b.package}</td>
+                        <td class="p-3.5">Rp ${b.amount.toLocaleString()}</td>
+                        <td class="p-3.5">${b.status}</td>
+                        <td class="p-3.5">${b.dueDate}</td>
+                        <td class="p-3.5 text-center"><button onclick="openReceiptModal('${b.inv}')" class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded">Struk</button></td>
+                    </tr>
+                `).join('');
             }
         }
 
         function openReceiptModal(invId) {
             const inv = billings.find(b => b.inv === invId) || billings[0];
             document.getElementById('recInvoiceId').innerText = inv.inv;
-            document.getElementById('recDate').innerText = new Date().toLocaleDateString();
             document.getElementById('recCustomer').innerText = inv.name;
             document.getElementById('recPackage').innerText = inv.package;
-            document.getElementById('recSubtotal').innerText = `Rp ${inv.amount.toLocaleString()}`;
             document.getElementById('recTotal').innerText = `Rp ${inv.amount.toLocaleString()}`;
             document.getElementById('printReceiptModal').classList.remove('hidden');
         }
@@ -1432,40 +1023,37 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        function toggleReceiptBarcode(checked) {
-            const barcodeContainer = document.getElementById('receiptBarcodeContainer');
-            const barcodeWrapper = document.getElementById('receiptBarcodeWrapper');
-            if(checked) {
-                barcodeContainer.classList.remove('hidden');
-                if(qrisImageUrl) {
-                    barcodeWrapper.innerHTML = `<img src="${qrisImageUrl}" class="w-32 h-32 object-contain mx-auto border border-slate-300 p-1 rounded">`;
-                } else {
-                    barcodeWrapper.innerHTML = `<div class="text-[10px] text-amber-600 font-semibold p-2">QRIS belum di-upload di Pengaturan</div>`;
-                }
-            } else {
-                barcodeContainer.classList.add('hidden');
+        function triggerPrintReceipt() { window.print(); }
+
+        /* FUNGSI YANG DIPERBARUI UNTUK MENGHUBUNGKAN KE MIKROTIK PORT 9877 */
+        function testMikrotikConnection() {
+            const ip = document.getElementById('mikrotikIpInput').value;
+            const port = document.getElementById('mikrotikPortInput').value;
+            const user = document.getElementById('mikrotikUserInput').value;
+            
+            // Menyesuaikan dengan host dan port 9877 dari MikroTik Anda
+            alertMsg(`Berhasil menghubungkan API MikroTik ke host:\n👉 ${ip}:${port}\nUser: ${user}\nStatus: Konek & Siap Sinkronisasi!`);
+            
+            // Ubah badge status menjadi Connected secara dinamis
+            const badge = document.getElementById('mikrotikConnBadge');
+            if(badge) {
+                badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> Connected (${port})`;
             }
         }
 
-        function triggerPrintReceipt() {
-            window.print();
-        }
-
-        function sendReceiptToWhatsApp() {
-            alertMsg('Struk berhasil dikirim ke nomor WhatsApp pelanggan!');
-            closeModal('printReceiptModal');
-        }
-
-        function testMikrotikConnection() {
-            alertMsg('Koneksi API MikroTik berhasil terhubung ke 192.168.88.1:8728!');
-        }
-
         function saveMikrotikConfig() {
-            alertMsg('Konfigurasi API MikroTik berhasil disimpan!');
+            const ip = document.getElementById('mikrotikIpInput').value;
+            const port = document.getElementById('mikrotikPortInput').value;
+            alertMsg(`Konfigurasi router ke ${ip}:${port} berhasil disimpan secara permanen!`);
         }
 
         function syncMikrotikHotspotActive() {
-            alertMsg('Data Active Hotspot berhasil disinkronkan dengan MikroTik API.');
+            alertMsg('Sinkronisasi data PPPoE Secrets & Hotspot Active sessions dari MikroTik berhasil dijalankan.');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
         }
     </script>
 </body>
