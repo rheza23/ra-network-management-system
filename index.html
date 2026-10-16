@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.A Network ISP Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0f1d',
+                        cardbg: '#111827',
+                        cardhover: '#1f2937',
+                        neoncyan: '#06b6d4',
+                        neonemerald: '#10b981',
+                        deepslate: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0f1d; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receiptPreviewBox, #receiptPreviewBox * {
+                visibility: visible;
+            }
+            #receiptPreviewBox {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm !important;
+                margin: 0;
+                padding: 10px;
+                border: none !important;
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col antialiased selection:bg-neoncyan selection:text-black">
+
+    <!-- SECTION LOGIN PAGE -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-darkbg p-4 sm:p-6 overflow-y-auto">
+        <div class="w-full max-w-md bg-cardbg border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <!-- Background Glow Elements -->
+            <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="text-center mb-8 relative z-10">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-xl shadow-cyan-500/20 mx-auto mb-4 border border-cyan-400/30">
+                    <i class="fa-solid fa-network-wired text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">R.A NETWORK</h1>
+                <p class="text-xs text-slate-400 mt-1">ISP Management & Billing System</p>
+            </div>
+
+            <div id="loginAlert" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium flex items-center space-x-2">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="loginAlertText">Username atau password salah!</span>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1.5">Username Admin</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="loginUsername" required placeholder="admin" value="admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-3.5 py-3 text-slate-100 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1.5">Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" value="admin123" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-3.5 py-3 text-slate-100 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0">
+                        <span class="text-slate-400 text-[11px]">Ingat Saya</span>
+                    </label>
+                    <a href="#" onclick="alertMsg('Silakan hubungi Super Admin untuk reset password.')" class="text-[11px] text-cyan-400 hover:underline">Lupa Password?</a>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2 mt-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Masuk ke Dashboard</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER (HIDDEN UNTIL LOGGED IN) -->
+    <div id="mainApp" class="hidden min-h-screen flex flex-col md:flex-row w-full">
+
+        <header class="md:hidden flex items-center justify-between bg-cardbg border-b border-slate-800 px-4 py-3 sticky top-0 z-40">
+            <div class="flex items-center space-x-3">
+                <div id="mobileLogoContainer" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20 cursor-pointer overflow-hidden border border-cyan-400/30" title="Klik untuk ganti Logo" onclick="triggerLogoUpload()">
+                    <i class="fa-solid fa-network-wired text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">R.A Network</h1>
+                    <p class="text-[10px] text-slate-400">ISP Management System</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-400 p-2 focus:outline-none" title="Keluar / Logout">
+                    <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                </button>
+                <button onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white p-2 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-5 border-b border-slate-800/80 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div id="desktopLogoContainer" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20 cursor-pointer overflow-hidden border border-cyan-400/30 group relative" title="Klik untuk ganti Logo Perusahaan" onclick="triggerLogoUpload()">
+                        <i class="fa-solid fa-network-wired text-lg"></i>
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-[10px] text-white">Ganti</div>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-base tracking-wide bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">R.A NETWORK</h2>
+                        <p class="text-xs text-slate-400 font-medium">ISP Management System</p>
+                    </div>
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <input type="file" id="logoFileInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+            <input type="file" id="qrisFileInput" accept="image/*" class="hidden" onchange="handleQrisUpload(event)">
+
+            <nav class="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
+                <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-sm">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="switchTab('pelanggan')" id="nav-pelanggan" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-users w-5 text-center"></i>
+                    <span>Pelanggan</span>
+                </a>
+                <a href="#" onclick="switchTab('packages')" id="nav-packages" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-box-archive w-5 text-center"></i>
+                    <span>Paket</span>
+                </a>
+                <a href="#" onclick="switchTab('billing')" id="nav-billing" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
+                    <span>Tagihan & Struk</span>
+                </a>
+                <a href="#" onclick="switchTab('mikrotik')" id="nav-mikrotik" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-network-wired w-5 text-center"></i>
+                    <span>Integrasi MikroTik</span>
+                </a>
+                <a href="#" onclick="switchTab('analytics')" id="nav-analytics" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" onclick="switchTab('settings')" id="nav-settings" class="nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200">
+                    <i class="fa-solid fa-sliders w-5 text-center"></i>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-800/80 bg-slate-900/40 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">MikroTik API</span>
+                    <span class="flex items-center text-xs font-semibold text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>Connected</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Gateway Status</span>
+                    <span class="text-xs font-medium text-cyan-400">Normal (0% Loss)</span>
+                </div>
+                <button onclick="handleLogout()" class="w-full mt-2 py-2 px-3 bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 rounded-xl text-xs font-semibold transition border border-slate-700/80 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Keluar (Logout)</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+            <header class="hidden md:flex items-center justify-between bg-cardbg/80 backdrop-blur-md border-b border-slate-800 px-6 py-4 sticky top-0 z-40">
+                <div class="flex items-center space-x-4">
+                    <h2 id="pageTitle" class="text-lg font-bold text-slate-100 flex items-center">
+                        <i class="fa-solid fa-chart-pie text-cyan-400 mr-2.5"></i> Dashboard
+                    </h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3 border-l border-slate-800 pl-2">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md">
+                            RA
+                        </div>
+                        <div class="hidden lg:block text-left">
+                            <div class="text-xs font-semibold text-slate-200">Administrator</div>
+                            <div class="text-[10px] text-cyan-400">R.A Network</div>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="p-2 text-slate-400 hover:text-rose-400 transition" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 md:p-8 flex-1 space-y-6">
+
+                <section id="tab-dashboard" class="tab-content space-y-6">
+                    <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-deepslate to-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <span class="px-3 py-1 rounded-full text-[10px] font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase tracking-wider">R.A Network ISP Management System</span>
+                                <h2 class="text-xl md:text-2xl font-bold text-white mt-2">Selamat Datang, Admin R.A Network! 👋</h2>
+                                <p class="text-xs md:text-sm text-slate-400 mt-1">Sistem manajemen ISP tetangga.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2.5">
+                                <button onclick="switchTab('settings')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 font-semibold text-xs rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                                    <i class="fa-solid fa-user-gear"></i>
+                                    <span>Edit Profile</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden group hover:border-emerald-500/50 transition-all">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-400">Status Server</p>
+                                    <h3 id="statServerStatus" class="text-xl font-bold text-emerald-400 mt-1 flex items-center">
+                                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse mr-2"></span>ONLINE
+                                    </h3>
+                                    <div class="flex items-center text-[10px] text-slate-400 mt-2 font-medium">
+                                        <i class="fa-solid fa-server mr-1 text-cyan-400"></i> CCR1036 • Uptime 45d
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/20 shadow-sm">
+                                    <i class="fa-solid fa-server"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden group hover:border-cyan-500/50 transition-all">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-400">Total Pelanggan Aktif</p>
+                                    <h3 id="statActiveCount" class="text-2xl font-bold text-white mt-1">0</h3>
+                                    <div class="flex items-center space-x-2 text-[10px] text-cyan-400 mt-2 font-semibold">
+                                        <span class="bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20"><i class="fa-solid fa-network-wired mr-1"></i>PPPoE: <strong id="statPppoeCount">0</strong></span>
+                                        <span class="bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20 text-purple-400"><i class="fa-solid fa-wifi mr-1"></i>Hotspot: <strong id="statHotspotCount">0</strong></span>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl border border-cyan-500/20 shadow-sm">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-400">Total Pelanggan Ter-isolir</p>
+                                    <h3 id="statIsolatedCount" class="text-2xl font-bold text-amber-400 mt-1">0</h3>
+                                    <div class="flex items-center text-[10px] text-rose-400 mt-2 font-semibold">
+                                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Perlu Tindakan
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20 shadow-sm">
+                                    <i class="fa-solid fa-user-slash"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden group hover:border-emerald-500/50 transition-all">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-400">Total Pendapatan Bulan Ini</p>
+                                    <h3 id="statRevenue" class="text-2xl font-bold text-white mt-1">Rp 28.450.000</h3>
+                                    <div class="flex items-center text-[10px] text-emerald-400 mt-2 font-semibold">
+                                        <i class="fa-solid fa-wallet mr-1"></i> Target Tercapai
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/20 shadow-sm">
+                                    <i class="fa-solid fa-rupiah-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="font-bold text-base text-slate-100">RouterOS</h3>
+                                        <p class="text-xs text-slate-400 mt-0.5">Device information</p>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-lg border border-purple-500/20 shadow-sm">
+                                        <i class="fa-solid fa-wifi"></i>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center space-x-2 py-3 border-b border-slate-800/80">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="font-bold text-xs tracking-wider text-slate-200 uppercase">SERVER-HOME</span>
+                                </div>
+
+                                <div class="divide-y divide-slate-800/60 text-xs">
+                                    <div class="flex items-center justify-between py-3">
+                                        <span class="text-slate-400">Connection</span>
+                                        <span class="font-semibold text-emerald-400">Online</span>
+                                    </div>
+                                    <div class="flex items-center justify-between py-3">
+                                        <span class="text-slate-400">CPU Load</span>
+                                        <span class="font-bold text-slate-100">0%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between py-3">
+                                        <span class="text-slate-400">Uptime</span>
+                                        <span class="font-bold text-slate-100 font-mono">2w4d14h43m20s</span>
+                                    </div>
+                                    <div class="flex items-center justify-between py-3">
+                                        <span class="text-slate-400">RouterOS</span>
+                                        <span class="font-bold text-slate-100 font-mono">7.24.4 (stable)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg lg:col-span-2 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-sm text-slate-200 flex items-center">
+                                    <i class="fa-solid fa-network-wired text-cyan-400 mr-2"></i> Daftar Pelanggan PPPoE
+                                </h3>
+                                <button onclick="switchTab('pelanggan')" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center space-x-1">
+                                    <span>Lihat Semua</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-900/60">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-800 text-[11px] font-semibold text-slate-400 bg-slate-900/80">
+                                            <th class="p-2.5 pl-3">Nama Pelanggan</th>
+                                            <th class="p-2.5">Username PPPoE</th>
+                                            <th class="p-2.5">Paket</th>
+                                            <th class="p-2.5">Status</th>
+                                            <th class="p-2.5 text-center pr-3">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboardPppoeTableBody" class="divide-y divide-slate-800/60 text-xs text-slate-300">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-pelanggan" class="tab-content hidden space-y-6">
+                    <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-800/80 pb-4 gap-4">
+                            <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 w-fit">
+                                <button id="subtab-btn-pppoe" onclick="switchPelangganSubTab('pppoe')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all bg-cyan-500 text-slate-950 shadow-md flex items-center space-x-2">
+                                    <i class="fa-solid fa-network-wired"></i>
+                                    <span>Pelanggan PPPoE</span>
+                                </button>
+                                <button id="subtab-btn-hotspot" onclick="switchPelangganSubTab('hotspot')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center space-x-2">
+                                    <i class="fa-solid fa-wifi"></i>
+                                    <span>Hotspot Active</span>
+                                </button>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button onclick="syncMikrotikHotspotActive()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-400 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2" title="Sinkronkan dengan MikroTik API">
+                                    <i class="fa-solid fa-rotate"></i>
+                                    <span>Sync MikroTik Active</span>
+                                </button>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-search text-xs"></i>
+                                    </span>
+                                    <input type="text" id="pelangganSearchInput" onkeyup="filterPelanggan()" placeholder="Cari nama / username..." class="bg-slate-900 text-xs text-slate-200 pl-9 pr-4 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-500 w-full sm:w-56">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="subview-pppoe" class="space-y-4">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 bg-slate-900/40">
+                                            <th class="p-3.5 rounded-l-xl">Pelanggan & Kontak</th>
+                                            <th class="p-3.5">Paket PPPoE</th>
+                                            <th class="p-3.5">Username & IP</th>
+                                            <th class="p-3.5">Status Sesi</th>
+                                            <th class="p-3.5">Jatuh Tempo</th>
+                                            <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pppoeTableBody" class="divide-y divide-slate-800/60 text-xs text-slate-300">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="subview-hotspot" class="space-y-4 hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 bg-slate-900/40">
+                                            <th class="p-3.5 rounded-l-xl">User / Profile</th>
+                                            <th class="p-3.5">Paket</th>
+                                            <th class="p-3.5">Username</th>
+                                            <th class="p-3.5">Status</th>
+                                            <th class="p-3.5">Uptime</th>
+                                            <th class="p-3.5 rounded-r-xl text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="hotspotTableBody" class="divide-y divide-slate-800/60 text-xs text-slate-300">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-packages" class="tab-content hidden space-y-6">
+                    <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-800 pb-4 gap-4">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-100 flex items-center">
+                                    <i class="fa-solid fa-box-archive text-cyan-400 mr-2.5"></i> Daftar Paket
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Atur daftar paket.</p>
+                            </div>
+                            <button onclick="openPackageModal()" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center space-x-2 shadow-md w-fit">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah Paket Baru</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="packagesGridContainer">
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-slate-400 font-semibold bg-slate-900/90">
+                                        <th class="p-3.5 pl-4">Nama Paket</th>
+                                        <th class="p-3.5">Kecepatan</th>
+                                        <th class="p-3.5">Kategori</th>
+                                        <th class="p-3.5">Harga (Rp)</th>
+                                        <th class="p-3.5 pr-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="packagesTableBody" class="divide-y divide-slate-800/60 text-slate-300">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-billing" class="tab-content hidden space-y-6">
+                    <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-800 pb-3 gap-3">
+                            <h3 class="text-sm font-bold text-slate-200">Manajemen Tagihan & Invoice</h3>
+                            <button onclick="openAddBillingModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center space-x-1.5 w-fit">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Buat Tagihan Baru</span>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 bg-slate-900/40">
+                                        <th class="p-3.5">No. Tagihan</th>
+                                        <th class="p-3.5">Pelanggan</th>
+                                        <th class="p-3.5">Paket</th>
+                                        <th class="p-3.5">Jumlah</th>
+                                        <th class="p-3.5">Status</th>
+                                        <th class="p-3.5">Jatuh Tempo</th>
+                                        <th class="p-3.5 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="billingTableBody" class="divide-y divide-slate-800/60 text-xs text-slate-300">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-mikrotik" class="tab-content hidden space-y-6">
+                    <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-100 flex items-center">
+                                    <i class="fa-solid fa-network-wired text-cyan-400 mr-2.5"></i> Konfigurasi API Router MikroTik
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Kelola koneksi router utama untuk sinkronisasi PPPoE dan Hotspot Active sessions.</p>
+                            </div>
+                            <span id="mikrotikConnBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span> Connected
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Identitas Router / Nama Server</label>
+                                    <input type="text" id="mikrorikNameInput" value="SERVER-HOME" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">IP Address / Host Router</label>
+                                    <input type="text" id="mikrotikIpInput" value="192.168.88.1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Port API MikroTik</label>
+                                    <input type="number" id="mikrotikPortInput" value="8728" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Username Admin Router</label>
+                                    <input type="text" id="mikrotikUserInput" value="admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Password Router</label>
+                                    <input type="password" id="mikrotikPassInput" value="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                                </div>
+                                <div class="pt-2 flex space-x-3">
+                                    <button onclick="testMikrotikConnection()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 rounded-xl font-semibold text-xs transition flex items-center justify-center space-x-2">
+                                        <i class="fa-solid fa-plug"></i>
+                                        <span>Test Koneksi API</span>
+                                    </button>
+                                    <button onclick="saveMikrotikConfig()" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-md">
+                                        <i class="fa-solid fa-floppy-disk"></i>
+                                        <span>Simpan Konfigurasi</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-800 pt-6 mt-6">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Statistik & Quick Sync API</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[11px] text-slate-400">Total PPPoE Secrets</span>
+                                    <div id="mikrotikSyncPppoeCount" class="text-lg font-bold text-white mt-1">5 Active</div>
+                                </div>
+                                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[11px] text-slate-400">Active Hotspot Sessions</span>
+                                    <div id="mikrotikSyncHotspotCount" class="text-lg font-bold text-purple-400 mt-1">3 Sessions</div>
+                                </div>
+                                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                                    <div>
+                                        <span class="text-[11px] text-slate-400">Sinkronisasi Data</span>
+                                        <div class="text-xs font-semibold text-emerald-400 mt-1">Auto-sync Realtime</div>
+                                    </div>
+                                    <button onclick="syncMikrotikHotspotActive()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition">
+                                        <i class="fa-solid fa-rotate"></i> Sync Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-analytics" class="tab-content hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg">
+                            <div class="flex justify-between items-center text-slate-400 text-xs font-medium">
+                                <span>Peak Bandwidth (Rx)</span>
+                                <i class="fa-solid fa-arrow-down text-emerald-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-100 mt-2">845 Mbps</h4>
+                            <p class="text-[10px] text-emerald-400 mt-1 font-semibold"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+12% dibanding kemarin</p>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg">
+                            <div class="flex justify-between items-center text-slate-400 text-xs font-medium">
+                                <span>Peak Bandwidth (Tx)</span>
+                                <i class="fa-solid fa-arrow-up text-cyan-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-100 mt-2">320 Mbps</h4>
+                            <p class="text-[10px] text-cyan-400 mt-1 font-semibold"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+8% dibanding kemarin</p>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg">
+                            <div class="flex justify-between items-center text-slate-400 text-xs font-medium">
+                                <span>Average Latency Ping</span>
+                                <i class="fa-solid fa-bolt text-amber-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-100 mt-2">4.2 ms</h4>
+                            <p class="text-[10px] text-emerald-400 mt-1 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Koneksi Stabil & Cepat</p>
+                        </div>
+
+                        <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg">
+                            <div class="flex justify-between items-center text-slate-400 text-xs font-medium">
+                                <span>Total Pemakaian Bandwidth</span>
+                                <i class="fa-solid fa-database text-purple-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-100 mt-2">5.82 TB</h4>
+                            <p class="text-[10px] text-purple-400 mt-1 font-semibold"><i class="fa-solid fa-chart-line mr-1"></i>Aktivitas Harian (24 Jam)</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg lg:col-span-2 space-y-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-800/80 pb-4">
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-100 flex items-center">
+                                        <i class="fa-solid fa-box text-cyan-400 mr-2.5"></i> Distribusi Paket Pelanggan & Alokasi Bandwidth
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">Analisis proporsi jenis paket langganan aktif pada router.</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center w-fit">
+                                    <i class="fa-solid fa-users mr-1.5"></i> Total 93 Pelanggan Aktif
+                                </span>
+                            </div>
+
+                            <div class="space-y-4 text-xs bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1.5">
+                                        <span class="text-slate-200">Paket Home 20 Mbps (Reguler)</span>
+                                        <span class="text-cyan-400">45% (42 User)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                        <div class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-full rounded-full transition-all" style="width: 45%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1.5">
+                                        <span class="text-slate-200">Paket Home 10 Mbps (Hemat)</span>
+                                        <span class="text-emerald-400">30% (28 User)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                        <div class="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full rounded-full transition-all" style="width: 30%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1.5">
+                                        <span class="text-slate-200">Paket Gamer 50 Mbps (High Speed)</span>
+                                        <span class="text-purple-400">15% (14 User)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                        <div class="bg-gradient-to-r from-purple-600 to-purple-400 h-full rounded-full transition-all" style="width: 15%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-semibold mb-1.5">
+                                        <span class="text-slate-200">Corporate & Hotspot Voucher</span>
+                                        <span class="text-amber-400">10% (9 User)</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                        <div class="bg-gradient-to-r from-amber-600 to-amber-400 h-full rounded-full transition-all" style="width: 10%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
+                                <table class="w-full text-left text-xs">
+                                    <thead>
+                                        <tr class="border-b border-slate-800 text-slate-400 font-semibold bg-slate-900/90">
+                                            <th class="p-3 pl-4">Nama Paket Layanan</th>
+                                            <th class="p-3">Jumlah Pelanggan</th>
+                                            <th class="p-3">Persentase</th>
+                                            <th class="p-3 pr-4">Estimasi Pendapatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800/60 text-slate-300 font-mono">
+                                        <tr>
+                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Home 20 Mbps</td>
+                                            <td class="p-3 text-cyan-400 font-bold">42 User</td>
+                                            <td class="p-3">45%</td>
+                                            <td class="p-3 pr-4 text-emerald-400">Rp 6.300.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Home 10 Mbps</td>
+                                            <td class="p-3 text-emerald-400 font-bold">28 User</td>
+                                            <td class="p-3">30%</td>
+                                            <td class="p-3 pr-4 text-emerald-400">Rp 2.800.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Paket Gamer 50 Mbps</td>
+                                            <td class="p-3 text-purple-400 font-bold">14 User</td>
+                                            <td class="p-3">15%</td>
+                                            <td class="p-3 pr-4 text-emerald-400">Rp 4.200.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 pl-4 font-sans font-semibold text-slate-200">Corporate & Hotspot</td>
+                                            <td class="p-3 text-amber-400 font-bold">9 User</td>
+                                            <td class="p-3">10%</td>
+                                            <td class="p-3 pr-4 text-emerald-400">Rp 4.500.000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-5">
+                            <h3 class="text-base font-bold text-slate-100 flex items-center">
+                                <i class="fa-solid fa-chart-pie text-cyan-400 mr-2"></i> Ringkasan Analitik
+                            </h3>
+
+                            <div class="space-y-4 text-xs text-slate-300">
+                                <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-200">Total Kapasitas Bandwidth</span>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">1.000 Mbps (1 Gbps)</span>
+                                    </div>
+                                    <p class="text-slate-400 text-[11px]">Kapasitas jalur pipa utama (Main Uplink ISP) dari Router Core MikroTik CCR1036.</p>
+                                </div>
+
+                                <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-200">Pemakaian Bandwidth (24 Jam)</span>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">5.82 TB</span>
+                                    </div>
+                                    <div class="space-y-1.5 pt-1 text-[11px]">
+                                        <div class="flex justify-between text-slate-300">
+                                            <span>Download (Rx)</span>
+                                            <span class="font-bold text-emerald-400">4.12 TB (70.8%)</span>
+                                        </div>
+                                        <div class="flex justify-between text-slate-300">
+                                            <span>Upload (Tx)</span>
+                                            <span class="font-bold text-cyan-400">1.70 TB (29.2%)</span>
+                                        </div>
+                                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex mt-2">
+                                            <div class="bg-emerald-500 h-full" style="width: 70.8%"></div>
+                                            <div class="bg-cyan-500 h-full" style="width: 29.2%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-200">Rata-Rata Beban Puncak (Peak Rate)</span>
+                                        <span class="font-bold text-amber-400">84.5% Peak</span>
+                                    </div>
+                                    <p class="text-slate-400 text-[11px]">Beban bandwidth mencapai puncak 845 Mbps pada jam-jam sibuk (20:00 - 22:00 WIB).</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-cyan-950/20 rounded-xl border border-cyan-500/30 text-xs space-y-1">
+                                <div class="font-bold text-cyan-400 flex items-center">
+                                    <i class="fa-solid fa-circle-info mr-1.5"></i> Status Alokasi Network
+                                </div>
+                                <p class="text-slate-400 text-[11px]">Kapasitas sisa bandwidth saat ini masih mencukupi untuk penambahan +30 pelanggan baru.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-settings" class="tab-content hidden space-y-6">
+                    <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                        <h3 class="text-sm font-bold text-slate-200">Pengaturan Perusahaan & Barcode QRIS Pembayaran</h3>
+                        <p class="text-xs text-slate-400">Upload gambar Barcode QRIS yang akan otomatis dicetak pada bagian bawah struk pembayaran.</p>
+                        
+                        <div class="max-w-md">
+                            <div class="flex items-center space-x-4 p-4 bg-slate-900/80 rounded-xl border border-slate-800">
+                                <div id="settingsQrisPreviewBox" class="w-24 h-24 bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 rounded-lg overflow-hidden text-center text-[10px]">
+                                    Belum Ada Barcode QRIS
+                                </div>
+                                <div>
+                                    <button onclick="document.getElementById('qrisFileInput').click()" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl transition flex items-center space-x-2">
+                                        <i class="fa-solid fa-qrcode"></i>
+                                        <span>Upload Barcode QRIS</span>
+                                    </button>
+                                    <p class="text-[11px] text-slate-400 mt-2">Maksimal 2MB (JPG/PNG)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardbg p-5 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                        <h3 class="text-sm font-bold text-slate-200">Ubah Username & Password Admin</h3>
+                        <p class="text-xs text-slate-400">Perbarui kredensial akun login admin sistem R.A Network.</p>
+                        
+                        <form onsubmit="handleUpdateCredentials(event)" class="space-y-4 max-w-md text-xs">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Username Baru</label>
+                                <input type="text" id="settingsNewUsername" required value="admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Password Baru</label>
+                                <input type="password" id="settingsNewPassword" required placeholder="Masukkan password baru" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <button type="submit" class="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition shadow-md">
+                                Simpan Kredensial Baru
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div id="packageModal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-cardbg border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeModal('packageModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="text-center mb-4">
+                <h3 id="packageModalTitle" class="text-lg font-bold text-slate-100">Tambah Paket Internet Baru</h3>
+                <p class="text-xs text-slate-400">Paket akan langsung tersedia untuk pilihan tagihan & struk</p>
+            </div>
+
+            <form onsubmit="handleSavePackage(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="pkgEditId" value="">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Nama Paket</label>
+                    <input type="text" id="pkgName" required placeholder="Contoh: Paket Ultra Speed 100 Mbps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Kecepatan (Bandwidth)</label>
+                    <input type="text" id="pkgSpeed" required placeholder="Contoh: 100 Mbps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Kategori / Segmen</label>
+                    <select id="pkgCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                        <option value="Home Broadband">Home Broadband</option>
+                        <option value="Gamer & Premium">Gamer & Premium</option>
+                        <option value="Corporate / Dedicated">Corporate / Dedicated</option>
+                        <option value="Hotspot Voucher">Hotspot Voucher</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Harga Bulanan (Rp)</label>
+                    <input type="number" id="pkgPrice" required placeholder="150000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="pt-2 flex space-x-2">
+                    <button type="button" onclick="closeModal('packageModal')" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition">Batal</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition shadow-md">Simpan Paket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addBillingModal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-cardbg border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeModal('addBillingModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="text-center mb-4">
+                <h3 class="text-lg font-bold text-slate-100">Buat Tagihan Baru</h3>
+                <p class="text-xs text-slate-400">Pilih paket terintegrasi untuk otomatis mengisi tarif</p>
+            </div>
+
+            <form onsubmit="handleSaveBilling(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Nama Pelanggan</label>
+                    <input type="text" id="billCustName" required placeholder="Nama Pelanggan" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Pilih Paket Terintegrasi</label>
+                    <select id="billPackageSelect" onchange="autoFillBillingAmount(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Jumlah Tagihan (Rp)</label>
+                    <input type="number" id="billAmount" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Jatuh Tempo</label>
+                    <input type="date" id="billDueDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-100 focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="pt-2 flex space-x-2">
+                    <button type="button" onclick="closeModal('addBillingModal')" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition">Batal</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow-md">Buat Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="printReceiptModal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-cardbg border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeModal('printReceiptModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="text-center mb-4">
+                <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center mx-auto mb-2 text-xl border border-cyan-500/30">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100">Print Preview Struk</h3>
+                <p class="text-xs text-slate-400">Struk Pembayaran Lunas Resmi R.A Network</p>
+            </div>
+
+            <div id="receiptPreviewBox" class="bg-white text-slate-900 p-5 rounded-xl shadow-inner font-mono text-[11px] leading-tight space-y-3 mb-5 border border-slate-300">
+                <div class="text-center border-b border-dashed border-slate-400 pb-3">
+                    <h4 class="font-bold text-sm tracking-widest text-slate-900 uppercase">R.A NETWORK DIGITAL SOLUTION</h4>
+                    <p class="text-[10px] text-slate-600">Internet Service Provider & Infrastucture</p>
+                    <p class="text-[10px] text-slate-600">0851-5990-0223</p>
+                </div>
+
+                <div class="space-y-1 text-[11px] text-slate-800">
+                    <div class="flex justify-between"><span>No. Transaksi</span> <span id="recInvoiceId" class="font-bold">INV-0000</span></div>
+                    <div class="flex justify-between"><span>Tanggal Bayar</span> <span id="recDate">01 Jan 2026 14:30</span></div>
+                    <div class="flex justify-between"><span>Nama Pelanggan</span> <span id="recCustomer" class="font-bold">Budi Santoso</span></div>
+                    <div class="flex justify-between"><span>Layanan / Paket</span> <span id="recPackage" class="font-bold">Paket Home 20 Mbps</span></div>
+                </div>
+
+                <div class="border-t border-b border-dashed border-slate-400 py-2">
+                    <table class="w-full text-left text-[11px]">
+                        <thead>
+                            <tr class="border-b border-slate-300 text-[10px] text-slate-600">
+                                <th class="pb-1">Keterangan</th>
+                                <th class="pb-1 text-right">Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="recItemDesc" class="py-1">Biaya Layanan Internet Bulanan</td>
+                                <td id="recSubtotal" class="py-1 text-right font-semibold">Rp 150.000</td>
+                            </tr>
+                            <tr>
+                                <td class="py-1 text-emerald-600 font-bold">STATUS PEMBAYARAN</td>
+                                <td class="py-1 text-right text-emerald-600 font-bold">LUNAS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center text-xs font-bold pt-1 text-slate-900 border-t border-slate-300">
+                    <span>TOTAL PEMBAYARAN</span>
+                    <span id="recTotal" class="text-sm">Rp 150.000</span>
+                </div>
+
+                <div id="receiptBarcodeContainer" class="hidden text-center border-t border-dashed border-slate-400 pt-3 mt-2">
+                    <p class="text-[10px] font-bold text-slate-800 mb-1">SCAN BARCODE PEMBAYARAN VIA QRIS</p>
+                    <div id="receiptBarcodeWrapper" class="flex justify-center"></div>
+                </div>
+
+                <div class="text-center border-t border-dashed border-slate-400 pt-3 mt-2 text-[10px] text-slate-600 space-y-1">
+                    <p class="font-bold text-slate-800">Terima Kasih Atas Pembayaran Anda!</p>
+                    <p>Struk ini merupakan bukti pembayaran yang sah.</p>
+                    <p class="text-[9px] text-slate-500 font-sans mt-2">-- Powered by R.A Network Digital Solution --</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 mb-4 flex items-center justify-between text-xs">
+                <span class="text-slate-300 font-medium flex items-center">
+                    <i class="fa-solid fa-barcode text-cyan-400 mr-2"></i> Tampilkan Barcode QRIS
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="toggleBarcodeCheckbox" class="sr-only peer" onchange="toggleReceiptBarcode(this.checked)">
+                    <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                </label>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex space-x-2">
+                    <button onclick="triggerPrintReceipt()" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold text-xs border border-slate-700 transition flex items-center justify-center space-x-1.5">
+                        <i class="fas fa-print text-cyan-400"></i>
+                        <span>Cetak Struk</span>
+                    </button>
+                    <button onclick="sendReceiptToWhatsApp()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold text-xs transition flex items-center justify-center space-x-1.5">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Kirim WA</span>
+                    </button>
+                </div>
+                <button onclick="closeModal('printReceiptModal')" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 rounded-xl text-xs font-semibold transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL -->
+    <div id="customAlertModal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center z-[100] p-4">
+        <div class="bg-cardbg border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center mx-auto text-xl border border-cyan-500/30">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <h4 class="font-bold text-base text-slate-100">Informasi Sistem</h4>
+            <p id="customAlertText" class="text-xs text-slate-300"></p>
+            <button onclick="closeCustomAlert()" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs transition shadow-md">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let internetPackages = [
+            { id: 1, name: 'Paket Home 10 Mbps', speed: '10 Mbps', category: 'Home Broadband', price: 100000 },
+            { id: 2, name: 'Paket Home 20 Mbps', speed: '20 Mbps', category: 'Home Broadband', price: 150000 },
+            { id: 3, name: 'Paket Gamer 50 Mbps', speed: '50 Mbps', category: 'Gamer & Premium', price: 300000 },
+            { id: 4, name: 'Paket Corporate Dedicated', speed: '100 Mbps', category: 'Corporate / Dedicated', price: 500000 }
+        ];
+
+        let pppoeUsers = [
+            { id: 'CUST-001', name: 'Budi Santoso', phone: '081234567890', username: 'budi_pppoe', package: 'Paket Home 20 Mbps', ip: '10.10.10.2', status: 'Active', expiry: '28 Feb 2026', routerLink: 'Connected' },
+            { id: 'CUST-002', name: 'Siti Aminah', phone: '081345678901', username: 'siti_pppoe', package: 'Paket Home 10 Mbps', ip: '10.10.10.3', status: 'Active', expiry: '02 Mar 2026', routerLink: 'Connected' },
+            { id: 'CUST-003', name: 'Joko Widodo', phone: '081567890123', username: 'joko_pppoe', package: 'Paket Gamer 50 Mbps', ip: '10.10.10.4', status: 'Isolated', expiry: '10 Jan 2026', routerLink: 'Disconnected' },
+            { id: 'CUST-004', name: 'Ahmad Dani', phone: '081789012345', username: 'ahmad_pppoe', package: 'Paket Home 20 Mbps', ip: '10.10.10.5', status: 'Active', expiry: '15 Mar 2026', routerLink: 'Connected' },
+            { id: 'CUST-005', name: 'Dewi Lestari', phone: '081890123456', username: 'dewi_pppoe', package: 'Paket Home 10 Mbps', ip: '10.10.10.6', status: 'Active', expiry: '20 Mar 2026', routerLink: 'Connected' }
+        ];
+
+        let hotspotUsers = [
+            { id: 'HOT-001', name: 'Voucher 3 Jam', profile: 'Hotspot 3 Jam', username: 'vcr-9921', status: 'Active', uptime: '01:24:12' },
+            { id: 'HOT-002', name: 'Voucher 1 Hari', profile: 'Hotspot 1 Hari', username: 'vcr-4412', status: 'Active', uptime: '05:12:40' },
+            { id: 'HOT-003', name: 'Voucher Harian', profile: 'Hotspot 1 Hari', username: 'vcr-7783', status: 'Active', uptime: '00:45:10' }
+        ];
+
+        let billings = [
+            { inv: 'INV-2026-001', name: 'Budi Santoso', package: 'Paket Home 20 Mbps', amount: 150000, status: 'Lunas', dueDate: '2026-02-28' },
+            { inv: 'INV-2026-002', name: 'Siti Aminah', package: 'Paket Home 10 Mbps', amount: 100000, status: 'Lunas', dueDate: '2026-03-02' },
+            { inv: 'INV-2026-003', name: 'Joko Widodo', package: 'Paket Gamer 50 Mbps', amount: 300000, status: 'Belum Lunas', dueDate: '2026-01-10' }
+        ];
+
+        let qrisImageUrl = '';
+        let adminCredentials = { username: 'admin', password: 'admin123' };
+
+        function alertMsg(msg) {
+            const modal = document.getElementById('customAlertModal');
+            const textEl = document.getElementById('customAlertText');
+            if(textEl) textEl.innerText = msg;
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeCustomAlert() {
+            const modal = document.getElementById('customAlertModal');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUsername').value;
+            const pass = document.getElementById('loginPassword').value;
+            const alertBox = document.getElementById('loginAlert');
+
+            if(user === adminCredentials.username && pass === adminCredentials.password) {
+                alertBox.classList.add('hidden');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                renderDashboard();
+                renderPppoeTable();
+                renderHotspotTable();
+                renderPackages();
+                renderBilling();
+            } else {
+                alertBox.classList.remove('hidden');
+            }
+        }
+
+        function handleUpdateCredentials(e) {
+            e.preventDefault();
+            const newU = document.getElementById('settingsNewUsername').value;
+            const newP = document.getElementById('settingsNewPassword').value;
+            adminCredentials.username = newU;
+            adminCredentials.password = newP;
+            alertMsg('Username dan password admin berhasil diperbarui!');
+        }
+
+        function handleLogout() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginAlert').classList.add('hidden');
+        }
+
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) {
+                activeTab.classList.remove('hidden');
+            }
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.className = "nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800 hover:text-slate-200";
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = "nav-item flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-sm";
+            }
+
+            const titleMap = {
+                'dashboard': 'Dashboard',
+                'pelanggan': 'Pelanggan',
+                'packages': 'Paket',
+                'billing': 'Tagihan & Struk',
+                'mikrotik': 'Integrasi MikroTik',
+                'analytics': 'Analytics',
+                'settings': 'Pengaturan'
+            };
+            const pageTitleEl = document.getElementById('pageTitle');
+            if (pageTitleEl) {
+                pageTitleEl.innerHTML = `<i class="fa-solid fa-chart-line text-cyan-400 mr-2.5"></i> ${titleMap[tabId] || 'Dashboard'}`;
+            }
+
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        function switchPelangganSubTab(subTab) {
+            const btnPppoe = document.getElementById('subtab-btn-pppoe');
+            const btnHotspot = document.getElementById('subtab-btn-hotspot');
+            const viewPppoe = document.getElementById('subview-pppoe');
+            const viewHotspot = document.getElementById('subview-hotspot');
+
+            if (subTab === 'pppoe') {
+                btnPppoe.className = "px-5 py-2 rounded-lg text-xs font-bold transition-all bg-cyan-500 text-slate-950 shadow-md flex items-center space-x-2";
+                btnHotspot.className = "px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center space-x-2";
+                viewPppoe.classList.remove('hidden');
+                viewHotspot.classList.add('hidden');
+            } else {
+                btnHotspot.className = "px-5 py-2 rounded-lg text-xs font-bold transition-all bg-cyan-500 text-slate-950 shadow-md flex items-center space-x-2";
+                btnPppoe.className = "px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center space-x-2";
+                viewHotspot.classList.remove('hidden');
+                viewPppoe.classList.add('hidden');
+            }
+        }
+
+        function renderPackages() {
+            const gridContainer = document.getElementById('packagesGridContainer');
+            const tbody = document.getElementById('packagesTableBody');
+
+            if (gridContainer) {
+                gridContainer.innerHTML = internetPackages.slice(0, 3).map(pkg => `
+                    <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase text-cyan-400 tracking-wider">${pkg.category}</span>
+                                <h4 class="font-bold text-sm text-slate-100 mt-0.5">${pkg.name}</h4>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">${pkg.speed}</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-800 pt-3">
+                            <span class="text-xs font-bold text-slate-200">Rp ${pkg.price.toLocaleString()}<span class="text-[10px] font-normal text-slate-400">/bln</span></span>
+                            <button onclick="editPackage(${pkg.id})" class="text-xs text-cyan-400 hover:underline">Edit</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (tbody) {
+                tbody.innerHTML = internetPackages.map(pkg => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3.5 pl-4 font-bold text-slate-200">${pkg.name}</td>
+                        <td class="p-3.5 font-mono text-cyan-400">${pkg.speed}</td>
+                        <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">${pkg.category}</span></td>
+                        <td class="p-3.5 font-semibold text-emerald-400">Rp ${pkg.price.toLocaleString()}</td>
+                        <td class="p-3.5 pr-4 text-center space-x-2">
+                            <button onclick="editPackage(${pkg.id})" class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded hover:bg-cyan-500/20 text-xs font-medium">Edit</button>
+                            <button onclick="deletePackage(${pkg.id})" class="px-2.5 py-1 bg-rose-500/10 text-rose-400 rounded hover:bg-rose-500/20 text-xs font-medium">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function openPackageModal() {
+            document.getElementById('packageModalTitle').innerText = "Tambah Paket Internet Baru";
+            document.getElementById('pkgEditId').value = "";
+            document.getElementById('pkgName').value = "";
+            document.getElementById('pkgSpeed').value = "";
+            document.getElementById('pkgCategory').value = "Home Broadband";
+            document.getElementById('pkgPrice').value = "";
+            document.getElementById('packageModal').classList.remove('hidden');
+        }
+
+        function editPackage(id) {
+            const pkg = internetPackages.find(p => p.id === id);
+            if (!pkg) return;
+            document.getElementById('packageModalTitle').innerText = "Edit Paket Internet";
+            document.getElementById('pkgEditId').value = pkg.id;
+            document.getElementById('pkgName').value = pkg.name;
+            document.getElementById('pkgSpeed').value = pkg.speed;
+            document.getElementById('pkgCategory').value = pkg.category;
+            document.getElementById('pkgPrice').value = pkg.price;
+            document.getElementById('packageModal').classList.remove('hidden');
+        }
+
+        function handleSavePackage(e) {
+            e.preventDefault();
+            const editId = document.getElementById('pkgEditId').value;
+            const name = document.getElementById('pkgName').value;
+            const speed = document.getElementById('pkgSpeed').value;
+            const category = document.getElementById('pkgCategory').value;
+            const price = parseInt(document.getElementById('pkgPrice').value, 10);
+
+            if (editId) {
+                const pkg = internetPackages.find(p => p.id === parseInt(editId, 10));
+                if (pkg) {
+                    pkg.name = name;
+                    pkg.speed = speed;
+                    pkg.category = category;
+                    pkg.price = price;
+                }
+            } else {
+                const newPkg = {
+                    id: Date.now(),
+                    name: name,
+                    speed: speed,
+                    category: category,
+                    price: price
+                };
+                internetPackages.push(newPkg);
+            }
+
+            renderPackages();
+            closeModal('packageModal');
+        }
+
+        function deletePackage(id) {
+            internetPackages = internetPackages.filter(p => p.id !== id);
+            renderPackages();
+        }
+
+        function openAddBillingModal() {
+            const selectEl = document.getElementById('billPackageSelect');
+            selectEl.innerHTML = internetPackages.map(pkg => `<option value="${pkg.name}">${pkg.name} - Rp ${pkg.price.toLocaleString()}</option>`).join('');
+            if(internetPackages.length > 0) {
+                autoFillBillingAmount(internetPackages[0].name);
+            }
+            document.getElementById('addBillingModal').classList.remove('hidden');
+        }
+
+        function autoFillBillingAmount(pkgName) {
+            const pkg = internetPackages.find(p => p.name === pkgName);
+            if (pkg) {
+                document.getElementById('billAmount').value = pkg.price;
+            }
+        }
+
+        function handleSaveBilling(e) {
+            e.preventDefault();
+            const name = document.getElementById('billCustName').value;
+            const pkgName = document.getElementById('billPackageSelect').value;
+            const amount = parseInt(document.getElementById('billAmount').value, 10);
+            const dueDate = document.getElementById('billDueDate').value;
+
+            const newInv = {
+                inv: `INV-2026-00${billings.length + 1}`,
+                name: name,
+                package: pkgName,
+                amount: amount,
+                status: 'Lunas',
+                dueDate: dueDate
+            };
+
+            billings.unshift(newInv);
+            renderBilling();
+            closeModal('addBillingModal');
+        }
+
+        function renderDashboard() {
+            const activeCount = pppoeUsers.filter(u => u.status === 'Active').length;
+            const isolatedCount = pppoeUsers.filter(u => u.status === 'Isolated').length;
+            const hotspotCount = hotspotUsers.length;
+
+            const statActive = document.getElementById('statActiveCount');
+            const statPppoe = document.getElementById('statPppoeCount');
+            const statHotspot = document.getElementById('statHotspotCount');
+            const statIsolated = document.getElementById('statIsolatedCount');
+
+            if(statActive) statActive.innerText = activeCount + hotspotCount;
+            if(statPppoe) statPppoe.innerText = activeCount;
+            if(statHotspot) statHotspot.innerText = hotspotCount;
+            if(statIsolated) statIsolated.innerText = isolatedCount;
+
+            const dTable = document.getElementById('dashboardPppoeTableBody');
+            if(dTable) {
+                dTable.innerHTML = pppoeUsers.slice(0, 3).map(u => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 pl-3 font-medium text-slate-200">${u.name}</td>
+                        <td class="p-3 font-mono text-cyan-400">${u.username}</td>
+                        <td class="p-3">${u.package}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'Active' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">${u.status}</span></td>
+                        <td class="p-3 text-center pr-3">
+                            <button onclick="switchTab('pelanggan')" class="text-xs text-cyan-400 hover:underline">Detail</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderPppoeTable() {
+            const tbody = document.getElementById('pppoeTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = pppoeUsers.map(u => `
+                <tr class="hover:bg-slate-800/40 transition">
+                    <td class="p-3.5 pl-3">
+                        <div class="font-bold text-slate-100">${u.name}</div>
+                        <div class="text-[11px] text-slate-400">${u.phone}</div>
+                    </td>
+                    <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${u.package}</span></td>
+                    <td class="p-3.5 font-mono">
+                        <div class="text-slate-200">${u.username}</div>
+                        <div class="text-[10px] text-slate-400">${u.ip}</div>
+                    </td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${u.status === 'Active' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">${u.status}</span>
+                    </td>
+                    <td class="p-3.5 text-slate-300">${u.expiry}</td>
+                    <td class="p-3.5 text-center">
+                        <button onclick="checkCustomerRouter('${u.username}', '${u.ip}')" class="px-2.5 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded text-xs font-semibold transition" title="Cek Router Pelanggan">
+                            <i class="fa-solid fa-satellite-dish"></i> Cek Router
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function checkCustomerRouter(username, ip) {
+            alertMsg(`Mengecek router pelanggan:\nUsername: ${username}\nIP: ${ip}\n\nStatus: BERHASIL (Ping OK, Latency: 3.5ms, Response normal).`);
+        }
+
+        function renderHotspotTable() {
+            const tbody = document.getElementById('hotspotTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = hotspotUsers.map(h => `
+                <tr class="hover:bg-slate-800/40 transition">
+                    <td class="p-3.5 pl-3">
+                        <div class="font-bold text-slate-100">${h.name}</div>
+                        <div class="text-[11px] text-purple-400">${h.profile}</div>
+                    </td>
+                    <td class="p-3.5 font-mono text-slate-200">${h.username}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">${h.status}</span></td>
+                    <td class="p-3.5 font-mono text-slate-300">${h.uptime}</td>
+                    <td class="p-3.5 text-center">
+                        <button onclick="alertMsg('Session Hotspot Active')" class="text-xs text-purple-400 hover:underline">Info</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderBilling() {
+            const tbody = document.getElementById('billingTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = billings.map(b => `
+                <tr class="hover:bg-slate-800/40 transition">
+                    <td class="p-3.5 font-mono text-cyan-400">${b.inv}</td>
+                    <td class="p-3.5 font-bold text-slate-200">${b.name}</td>
+                    <td class="p-3.5">${b.package}</td>
+                    <td class="p-3.5 font-semibold text-slate-100">Rp ${b.amount.toLocaleString()}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${b.status === 'Lunas' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${b.status}</span></td>
+                    <td class="p-3.5 text-slate-300">${b.dueDate}</td>
+                    <td class="p-3.5 text-center">
+                        <button onclick="openReceiptModal('${b.inv}')" class="px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-semibold transition"><i class="fa-solid fa-print mr-1"></i> Struk</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterPelanggan() {}
+        function handleGlobalSearch(e) {}
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            if(sidebar) sidebar.classList.toggle('-translate-x-full');
+        }
+
+        function triggerLogoUpload() {
+            document.getElementById('logoFileInput').click();
+        }
+
+        function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const logoContainers = [document.getElementById('mobileLogoContainer'), document.getElementById('desktopLogoContainer')];
+                    logoContainers.forEach(container => {
+                        if(container) {
+                            container.innerHTML = `<img src="${evt.target.result}" class="w-full h-full object-cover">`;
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleQrisUpload(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    qrisImageUrl = evt.target.result;
+                    const previewBox = document.getElementById('settingsQrisPreviewBox');
+                    if(previewBox) {
+                        previewBox.innerHTML = `<img src="${qrisImageUrl}" class="w-full h-full object-cover">`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openReceiptModal(invId) {
+            const inv = billings.find(b => b.inv === invId) || billings[0];
+            document.getElementById('recInvoiceId').innerText = inv.inv;
+            document.getElementById('recDate').innerText = new Date().toLocaleDateString();
+            document.getElementById('recCustomer').innerText = inv.name;
+            document.getElementById('recPackage').innerText = inv.package;
+            document.getElementById('recSubtotal').innerText = `Rp ${inv.amount.toLocaleString()}`;
+            document.getElementById('recTotal').innerText = `Rp ${inv.amount.toLocaleString()}`;
+            document.getElementById('printReceiptModal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function toggleReceiptBarcode(checked) {
+            const barcodeContainer = document.getElementById('receiptBarcodeContainer');
+            const barcodeWrapper = document.getElementById('receiptBarcodeWrapper');
+            if(checked) {
+                barcodeContainer.classList.remove('hidden');
+                if(qrisImageUrl) {
+                    barcodeWrapper.innerHTML = `<img src="${qrisImageUrl}" class="w-32 h-32 object-contain mx-auto border border-slate-300 p-1 rounded">`;
+                } else {
+                    barcodeWrapper.innerHTML = `<div class="text-[10px] text-amber-600 font-semibold p-2">QRIS belum di-upload di Pengaturan</div>`;
+                }
+            } else {
+                barcodeContainer.classList.add('hidden');
+            }
+        }
+
+        function triggerPrintReceipt() {
+            window.print();
+        }
+
+        function sendReceiptToWhatsApp() {
+            alertMsg('Struk berhasil dikirim ke nomor WhatsApp pelanggan!');
+            closeModal('printReceiptModal');
+        }
+
+        function testMikrotikConnection() {
+            alertMsg('Koneksi API MikroTik berhasil terhubung ke 192.168.88.1:8728!');
+        }
+
+        function saveMikrotikConfig() {
+            alertMsg('Konfigurasi API MikroTik berhasil disimpan!');
+        }
+
+        function syncMikrotikHotspotActive() {
+            alertMsg('Data Active Hotspot berhasil disinkronkan dengan MikroTik API.');
+        }
+    </script>
+</body>
+</html>
